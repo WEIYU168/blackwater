@@ -1,0 +1,85 @@
+#mobile-controls { pointer-events: none; }
+#mobile-controls[hidden] { display: none; }
+#mobile-controls button, .move-pad { touch-action: none; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+.move-pad {
+  --pad-size: clamp(112px, 30vh, 140px);
+  position: absolute;
+  left: max(12px, env(safe-area-inset-left));
+  bottom: max(12px, env(safe-area-inset-bottom));
+  width: var(--pad-size); height: var(--pad-size);
+  pointer-events: auto;
+  border: 2px solid #dbc49ecc; border-radius: 50%;
+  background: radial-gradient(circle, #f6efe1b8 0 34%, #2b242098 35% 100%);
+  box-shadow: 0 3px 16px #0005;
+}
+.move-pad button {
+  position: absolute; width: 40%; height: 40%;
+  padding: 0; border: 0; border-radius: 50%;
+  background: transparent; color: #fff8ea; font-size: 21px;
+}
+.pad-up { top: 0; left: 30%; }
+.pad-down { bottom: 0; left: 30%; }
+.pad-left { left: 0; top: 30%; }
+.pad-right { right: 0; top: 30%; }
+.pad-thumb {
+  position: absolute; left: 34%; top: 34%; width: 32%; height: 32%;
+  pointer-events: none; border-radius: 50%; border: 2px solid #e8d6b7;
+  background: #f6efe1e6; box-shadow: 0 2px 8px #0005;
+}
+.move-pad.active .pad-thumb { background: #f4d6a2; }
+.mobile-actions {
+  position: absolute; right: max(12px, env(safe-area-inset-right));
+  bottom: max(12px, env(safe-area-inset-bottom));
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  pointer-events: auto;
+}
+.mobile-actions button {
+  border: 2px solid #dfc89e; color: #fff8ea; font-weight: 700;
+  background: #2b2420c4; box-shadow: 0 3px 12px #0004;
+}
+.mobile-run { width: 72px; height: 44px; border-radius: 22px; font-size: 14px; }
+.mobile-run.active { background: #b5462f; }
+.mobile-interact { width: 72px; height: 72px; border-radius: 50%; font-size: 18px; }
+.mobile-guide { font-size: 14px; line-height: 1.5; color: #ffe3b4; }
+html.touch-layout { --fs: 14px; overscroll-behavior: none; }
+.touch-layout body { height: 100dvh; overscroll-behavior: none; }
+.touch-layout #world { height: 100dvh; touch-action: none; }
+.touch-layout .hud-top {
+  top: max(6px, env(safe-area-inset-top));
+  left: max(8px, env(safe-area-inset-left)); right: max(8px, env(safe-area-inset-right));
+  gap: 8px;
+}
+.touch-layout .objective { width: min(42vw, 360px); max-width: 42vw; padding: 6px 9px; font-size: 12px; }
+.touch-layout .objective .goal { margin-top: 2px; line-height: 1.4; }
+.touch-layout .objective .progress { margin-top: 2px; }
+.touch-layout .hud-buttons { max-width: 52vw; gap: 4px; }
+.touch-layout .hud-buttons .btn { min-height: 44px; padding: 5px 8px; font-size: 12px; }
+.touch-layout .help, .touch-layout .devbar { display: none; }
+.touch-layout .prompt { bottom: max(24px, env(safe-area-inset-bottom)); max-width: calc(100vw - 310px); padding: 6px 10px; font-size: 12px; }
+.touch-layout .prompt kbd { display: none; }
+.touch-layout .overlay {
+  padding: max(6px, env(safe-area-inset-top)) max(8px, env(safe-area-inset-right)) max(6px, env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-left));
+}
+.touch-layout .modal { max-height: calc(100dvh - max(6px, env(safe-area-inset-top)) - max(6px, env(safe-area-inset-bottom))); }
+.touch-layout .modal-head, .touch-layout .modal-foot { padding: 6px 10px; gap: 6px; }
+.touch-layout .modal-head h2 { font-size: 16px; }
+.touch-layout .modal-head .sub { font-size: 11px; }
+.touch-layout .modal-body { min-height: 0; padding: 10px; overscroll-behavior: contain; }
+.touch-layout .modal .btn { min-height: 40px; }
+.touch-layout input, .touch-layout textarea, .touch-layout select { font-size: 16px; }
+.touch-layout .title-screen { overflow: auto; }
+.touch-layout .title-card { max-height: 100dvh; overflow: auto; padding: 14px 20px; }
+.touch-layout .title-card .btn { min-height: 44px; }
+.touch-layout .dialog { bottom: max(10px, env(safe-area-inset-bottom)); max-height: 70dvh; overflow: auto; padding: 10px 14px; }
+.touch-layout .view-overlay { bottom: max(8px, env(safe-area-inset-bottom)); max-height: 60dvh; overflow: auto; padding: 8px 12px; }
+.touch-layout .view-overlay .btn { min-height: 40px; }
+.touch-layout .toast-wrap { top: max(72px, env(safe-area-inset-top)); width: 90vw; font-size: 12px; }
+@media (orientation: portrait) {
+  .touch-layout .prompt { bottom: calc(160px + env(safe-area-inset-bottom)); max-width: calc(100vw - 32px); }
+}
+@media (orientation: landscape) and (max-height: 500px) {
+  .touch-layout .title-card h1 { font-size: clamp(28px, 11vh, 48px); }
+  .touch-layout .title-card .tagline { margin: 4px 0 10px; font-size: 14px; }
+  .touch-layout .title-card .credit { margin-top: 10px; font-size: 10px; }
+  .touch-layout .mobile-guide { margin: 8px 0 0; }
+}
