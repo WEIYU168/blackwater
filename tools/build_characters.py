@@ -8,6 +8,7 @@ All colours are embedded in mesh corner colours; no external textures are needed
 """
 import argparse
 import array
+import hashlib
 import json
 import math
 import sys
@@ -399,21 +400,41 @@ def limbs(spec, root, body, hip, shoulder):
         pants_colour = spec['skin'] if skirt else spec['pants']
         loft('Upper trouser ' + suffix, [(.024, .085, .093, 0, 0), (-.08, .080, .090, 0, .008), (-.26, .067, .074, 0, .008), (-.411, .056, .062, 0, 0)], leg, pants_colour, 16)
         calf_colour = spec['skin'] if (skirt or spec['style'] in ('farmer', 'girlSmall')) else spec['pants']
-        loft('Lower leg ' + suffix, [(.018, .057, .062, 0, 0), (-.09, .061, .064, 0, .008), (-.24, .046, .050, 0, .009), (-.365, .034, .038, 0, 0)], shin, calf_colour, 16)
-        if calf_colour != spec['skin']:
-            loft('Trouser hem ' + suffix, [(-.315, .044, .045, 0, 0), (-.352, .041, .043, 0, 0)], shin, spec['pants'], 16)
-        if spec.get('seated') and ((spec['style'] == 'patient' and side == -1) or spec['style'] in ('girl', 'girlSmall')):
-            for band in range(6):
-                z = -.18 - band * .024
-                loft('Clean bandage layer', [(z, .050 - band * .002, .054 - band * .002, 0, .007), (z - .026, .050 - band * .002, .054 - band * .002, 0, .007)], shin, 'bandage' if band % 2 == 0 else '#d8d3c3', 14)
-        sandals = spec['style'] in ('farmer', 'patient', 'girl', 'girlSmall', 'mao')
-        ellipsoid('Foot ' + suffix, (0, -.042, -.373), (.046, .093, .033), shin, spec['skin'] if sandals else 'shoe', 16, 8)
-        ellipsoid('Sole ' + suffix, (0, -.043, -.397), (.050, .096, .012), shin, 'sole', 16, 6)
-        if sandals:
-            tube('Sandal strap ' + suffix, [(-.044, -.071, -.367), (0, -.080, -.343), (.044, -.071, -.367)], .011, shin, 'leather', 8)
+        # Facing -Y in Blender (+Z in the game), anatomical left is +X.
+        below_knee = spec['id'] == 'baoyu' and side == 1
+        feet_removed = spec['id'] == 'quance'
+        if below_knee or feet_removed:
+            end = -.17 if below_knee else -.335
+            radius = .057 if below_knee else .040
+            loft('Remaining lower leg ' + suffix, [(.018, .057, .062, 0, 0), (-.09, .061, .064, 0, .008),
+                 (end + .025, radius - .004, radius, 0, .007)], shin, calf_colour, 16)
+            loft('Closed bandage ' + suffix, [(end + .095, radius + .006, radius + .010, 0, .007),
+                 (end + .018, radius, radius + .004, 0, .007),
+                 (end, radius * .8, radius * .85, 0, .007)], shin, 'bandage', 16)
+            ellipsoid('Rounded bandage end ' + suffix, (0, .007, end),
+                      (radius * .81, radius * .86, .015), shin, 'bandage', 16, 8)
+            for band in range(4):
+                z = end + .09 - band * .02
+                r = radius + .006 - band * .0015
+                loft('Bandage wrap ' + suffix, [(z, r + .001, r + .005, 0, .007),
+                     (z - .013, r, r + .004, 0, .007)], shin,
+                     'bandage' if band % 2 == 0 else '#d8d3c3', 16)
         else:
-            for z in (-.009, .010, .029):
-                tube('Shoe lace ' + suffix, [(-.026, -.029 + z, -.347), (.026, -.026 + z, -.347)], .0025, shin, 'ivory', 5)
+            loft('Lower leg ' + suffix, [(.018, .057, .062, 0, 0), (-.09, .061, .064, 0, .008), (-.24, .046, .050, 0, .009), (-.365, .034, .038, 0, 0)], shin, calf_colour, 16)
+            if calf_colour != spec['skin']:
+                loft('Trouser hem ' + suffix, [(-.315, .044, .045, 0, 0), (-.352, .041, .043, 0, 0)], shin, spec['pants'], 16)
+            if spec['style'] == 'patient' and side == -1:
+                for band in range(6):
+                    z = -.18 - band * .024
+                    loft('Clean bandage layer', [(z, .050 - band * .002, .054 - band * .002, 0, .007), (z - .026, .050 - band * .002, .054 - band * .002, 0, .007)], shin, 'bandage' if band % 2 == 0 else '#d8d3c3', 14)
+            sandals = spec['style'] in ('farmer', 'patient', 'girl', 'girlSmall', 'mao')
+            ellipsoid('Foot ' + suffix, (0, -.042, -.373), (.046, .093, .033), shin, spec['skin'] if sandals else 'shoe', 16, 8)
+            ellipsoid('Sole ' + suffix, (0, -.043, -.397), (.050, .096, .012), shin, 'sole', 16, 6)
+            if sandals:
+                tube('Sandal strap ' + suffix, [(-.044, -.071, -.367), (0, -.080, -.343), (.044, -.071, -.367)], .011, shin, 'leather', 8)
+            else:
+                for z in (-.009, .010, .029):
+                    tube('Shoe lace ' + suffix, [(-.026, -.029 + z, -.347), (.026, -.026 + z, -.347)], .0025, shin, 'ivory', 5)
         if spec.get('seated'):
             leg.rotation_euler.x = -math.pi / 2
             shin.rotation_euler.x = math.pi / 2
@@ -647,7 +668,7 @@ def main():
         print('BUILT', spec['id'], characters[spec['id']]['triangles'], 'triangles', flush=True)
     (out_dir / 'characters-meshes.bin').write_bytes(binary)
     library = dict(version=1, coordinates='Y-up, +Z forward', colorSpace='linear-sRGB',
-                   buffer='characters-meshes.bin', characters=characters)
+                   buffer='characters-meshes.bin?v=' + hashlib.sha256(binary).hexdigest()[:12], characters=characters)
     (out_dir / 'characters.json').write_text(json.dumps(library, ensure_ascii=False, separators=(',', ':')), encoding='utf-8')
     bpy.ops.wm.save_as_mainfile(filepath=str(out_dir / 'blackwater-characters.blend'))
     if args.render_preview:

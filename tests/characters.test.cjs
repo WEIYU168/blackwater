@@ -3,7 +3,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const base = path.resolve(__dirname,'../assets/characters');
 const data = JSON.parse(fs.readFileSync(path.join(base,'characters.json'),'utf8'));
-const binary = fs.readFileSync(path.join(base,data.buffer));
+const binary = fs.readFileSync(path.join(base,data.buffer.split('?')[0]));
 const ids = ['player','chen','templekeeper','saltfarmer','labassistant','wang','sun','mao','engineer','baoyu','quance','clinicPatient'];
 assert.deepEqual(Object.keys(data.characters).sort(),ids.sort());
 assert(binary.length>1000 && binary.length<16*1024*1024, 'Cast mesh download exceeds 16 MiB budget');

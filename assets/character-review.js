@@ -1,5 +1,5 @@
 import { U as Scene, F as PerspectiveCamera, o as WebGLRenderer, w as HemisphereLight, _ as DirectionalLight, A as Mesh, g as CylinderGeometry, N as MeshStandardMaterial, m as Color } from './three-AKSjQ_ch.js';
-import { loadCharacterLibrary, createCharacter } from './characters.js';
+import { loadCharacterLibrary, createCharacter } from './characters.js?v=e7e936615009';
 
 const characters = [
   ['player','調查員 008','循線尋找答案的人','卡其草帽、苔綠襯衫與側背資料袋。保留調查員的身分，補上衣領、鞋履與面部細節。','延續遊戲原本角色，以書中小鎮的年代感重新設計。','ill-2-K9VBww_N.jpg'],
@@ -11,8 +11,8 @@ const characters = [
   ['sun','孫理蓮女士','把憐憫之門打開','灰褐波浪短髮、深靛藍洋裝與柔和臉型。以穩重的姿態，呈現長年投入照顧的形象。','參考第 33 頁標名照片，保留簡潔衣領與洋裝輪廓。','page-33-DKZv5Eiw.jpg'],
   ['mao','毛碧梅女士','手藝，也是一份希望','深灰盤髮、粉紫上衣與灰綠裙，搭配編織手袋。服裝取材自手工藝場景的柔和色彩。','第 16 頁圖中未逐一標名，人物外觀為場景啟發的詮釋。','page-16-m8-yb6_s.jpg'],
   ['engineer','工程人員','讓乾淨的水抵達村落','卡其工作帽、短袖襯衫、軍綠長褲與棕靴，帶著工作圖紙。方正輪廓呼應戶外工程工作。','延續遊戲身分與自來水工程場景，屬造型詮釋。','page-17-36jStZKJ.jpg'],
-  ['baoyu','寶玉','記得跳格子的日子','偏分短黑髮、薄荷色翻領上衣與靛藍褲。以安靜坐姿、自然手勢與清潔包紮呈現。','依第 13 頁左側較年長的女孩設計。','page-13-CIMUQZEC.jpg'],
-  ['quance','泉策','和姐姐一起等待明天','黑色鮑伯短髮、紅髮帶與磚紅上衣。身形較小，坐姿和配色都與寶玉明確區分。','依第 13 頁右側較年幼的女孩設計。','page-13-CIMUQZEC.jpg'],
+  ['baoyu','寶玉','記得跳格子的日子','偏分短黑髮、薄荷色翻領上衣與靛藍褲。左腿膝下截肢並完整包紮，右腳保留，維持安靜自然的坐姿。','依第 13 頁左側較年長的女孩設計。','page-13-CIMUQZEC.jpg'],
+  ['quance','泉策','和姐姐一起等待明天','黑色鮑伯短髮、紅髮帶與磚紅上衣。雙腳截除後完整包紮，保留雙小腿；身形較小，與寶玉並坐。','依第 13 頁右側較年幼的女孩設計。','page-13-CIMUQZEC.jpg'],
   ['clinicPatient','診所病人','被好好對待的鄉親','稀薄灰髮、淡色上衣與乾淨腿部包紮。診所內有座椅與支腳凳，讓看診動作自然地發生。','參考第 2 頁長者，新增為診所看診情境人物。','ill-1-CMGtWHPR.jpg']
 ];
 const canvas = document.querySelector('#character-canvas');
@@ -40,7 +40,7 @@ function select(id){
   document.querySelector('#character-role').textContent=entry[2];document.querySelector('#character-name').textContent=entry[1];
   document.querySelector('#character-description').textContent=entry[3];document.querySelector('#character-reference').textContent=entry[4];
   document.querySelector('#book-image').src='./assets/'+entry[5];document.querySelector('#book-link').href='./assets/'+entry[5];
-  document.querySelector('#model-download').href='./assets/characters/'+id+'.glb';
+  document.querySelector('#model-download').href='./assets/characters/'+id+'.glb?v=205f886b6127';
   for(const b of document.querySelectorAll('.roster button'))b.setAttribute('aria-pressed',String(b.dataset.id===id));
   frameCamera();
 }

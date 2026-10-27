@@ -4,7 +4,7 @@ const templates = new Map();
 const material = new MeshStandardMaterial({ vertexColors: true, roughness: 0.88, metalness: 0 });
 
 // Blender exports one mesh per articulated part, with clothing colors baked into vertices.
-export async function loadCharacterLibrary(url = new URL('./characters/characters.json', import.meta.url)) {
+export async function loadCharacterLibrary(url = new URL('./characters/characters.json?v=205f886b6127', import.meta.url)) {
   const response = await fetch(url);
   if (!response.ok) throw new Error('人物模型資料載入失敗，請重新整理。');
   const data = await response.json();
