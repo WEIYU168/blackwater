@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>黑水詛咒｜人物與診所預覽</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="./assets/character-review.css">
+</head>
+<body>
+  <header><a class="brand" href="./character-review.html">黑水詛咒<span>北門人物誌</span></a><span class="local-note">人物檢視 · 靜音</span><a class="clinic-link" href="./clinic-review.html?dev=1">走進金河診所 <span>↗</span></a></header>
+  <main>
+    <section class="intro"><p class="eyebrow">CHARACTER STUDY · 01</p><h1>讓故事裡的人，<br>走進北門。</h1><p>依遊戲內解謎書的插圖，重新製作人物的髮型、服裝與神情。<br>選一位人物，轉個方向看看。</p></section>
+    <div class="review-layout">
+      <nav class="roster" aria-label="選擇人物" id="roster"></nav>
+      <section class="stage" aria-label="可旋轉的 3D 人物模型">
+        <div class="stage-heading"><span id="character-number">06 / 12</span><span>BLENDER · 3D</span></div>
+        <canvas id="character-canvas" aria-label="拖曳旋轉人物，滾輪縮放" tabindex="0"></canvas>
+        <div class="stage-footer"><span>拖曳旋轉 · 滾輪縮放</span><div><button id="front">正面</button><button id="back">背面</button><button id="rotate" aria-pressed="false">自動旋轉</button></div></div>
+        <p id="loading" role="status">正在準備人物模型…</p>
+      </section>
+      <aside class="character-detail"><p class="eyebrow" id="character-role"></p><h2 id="character-name"></h2><p id="character-description"></p><div class="detail-rule"></div><p class="eyebrow">書頁與造型</p><p class="reference-note" id="character-reference"></p><a id="book-link" target="_blank" rel="noopener"><img id="book-image" alt="解謎書人物參考插圖"><span>放大參考插圖 ↗</span></a><a id="model-download" class="model-link" download>下載此人物 3D 模型 ↓</a></aside>
+    </div>
+    <footer>人物參考遊戲內解謎書重新建模。王醫師對話為史料改編，並非逐字原話。<a href="./">開始遊戲 ↗</a></footer>
+  </main>
+  <script type="module" src="./assets/character-review.js"></script>
+</body>
+</html>
