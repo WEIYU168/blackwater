@@ -16,3 +16,5 @@
 人物檢視：`character-review.html`；靜音診所預覽：`clinic-review.html`。預覽使用獨立臨時進度。可編輯 Blender 檔與各人物 GLB 位於 `assets/characters/`，參考依據及重建指令見 `tools/art_sources.md`。
 
 人物及診所回歸檢查：`node tests/characters.test.cjs`、`node tests/clinic.test.cjs`。
+
+人物遮擋與座椅對齊檢查：`node tests/visibility.test.cjs`。

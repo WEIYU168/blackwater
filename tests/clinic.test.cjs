@@ -33,6 +33,28 @@ function hotspot(id) {
   assert(floorTop > .25, 'Clinic floor must cover the existing 0.25 m raised path');
   assert.equal(clinic.patientAnchor.position.y, floorTop, 'Patient must stand on the clinic floor');
   assert.equal(clinic.doctorPosition.y, floorTop, 'Doctor must stand on the clinic floor');
+  world.scene.updateMatrixWorld(true);
+  const tray = world.scene.getObjectByName('instrument-tray');
+  const trayTop = tray.getWorldPosition(new T.et()).y + tray.geometry.parameters.height / 2;
+  for (const name of ['surgical-scissors', 'surgical-forceps', 'surgical-scalpel']) {
+    const tool = world.scene.getObjectByName(name);
+    assert(tool, `Missing clinic instrument: ${name}`);
+    let vertices = 0;
+    tool.traverse(mesh => {
+      if (!mesh.isMesh) return;
+      assert(mesh.material.metalness > .5, `${name} must have a metal finish`);
+      const positions = mesh.geometry.attributes.position;
+      for (let i = 0; i < positions.count; i++) {
+        const p = new T.et().fromBufferAttribute(positions, i).applyMatrix4(mesh.matrixWorld);
+        assert(p.y > trayTop, `${name} intersects the tray`);
+        assert(Math.abs(p.x - tray.position.x) < .39 && Math.abs(p.z - tray.position.z) < .28,
+          `${name} hangs off the tray`);
+        vertices++;
+      }
+    });
+    assert(vertices > 0, `${name} has no visible geometry`);
+  }
+  console.log('PASS three metal surgical instruments sit above and within the tray');
   world.clinic = clinic;
   world.collide(clinic.doctorPosition.x, clinic.doctorPosition.z, .35, .35);
   Object.assign(world, methods('cancelRoute(){', 'tryInteract(){', {

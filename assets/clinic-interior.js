@@ -1,5 +1,5 @@
 import {
-  C as Group, A as Mesh, s as BoxGeometry, g as CylinderGeometry,
+  C as Group, A as Mesh, s as BoxGeometry, g as CylinderGeometry, Y as TorusGeometry,
   N as MeshStandardMaterial, et as Vector3, L as PointLight,
 } from './three-AKSjQ_ch.js';
 
@@ -113,14 +113,40 @@ export function buildClinic(host, helpers) {
   place(bench(.72), 'patient-chair', -15.8, 11.0);
   host.collide(-15.8, 11.0, .38, .36);
   // A supported, covered lower leg conveys care without depicting an open wound.
-  box(fixtures, 'foot-rest', [.55, .25, .55], [-15.8, .125, 11.65], '#7d6950');
-  box(fixtures, 'foot-rest-cushion', [.59, .065, .59], [-15.8, .28, 11.65], '#d7ddcf');
+  box(fixtures, 'foot-rest', [.55, .319, .55], [-15.8, .1595, 11.65], '#7d6950');
+  box(fixtures, 'foot-rest-cushion', [.59, .065, .59], [-15.8, .349, 11.65], '#d7ddcf');
   host.collide(-15.8, 11.65, .3, .3);
-  place(table(.55, .5, .75), 'instrument-trolley', -16.1, 12.75);
-  host.collide(-16.1, 12.75, .275, .25);
-  box(fixtures, 'instrument-tray', [.44, .025, .32], [-16.1, .79, 12.75], '#c6c8c1');
-  box(fixtures, 'folded-bandage', [.16, .07, .12], [-16.2, .84, 12.73], '#f6f2e5');
-  bottle(-15.98, .81, 12.72, '#9b6c36');
+  place(table(.9, .7, .75), 'instrument-trolley', -16.1, 12.75);
+  host.collide(-16.1, 12.75, .45, .35);
+  box(fixtures, 'instrument-tray', [.78, .025, .56], [-16.1, .79, 12.75], '#64716f');
+  const steel = new MeshStandardMaterial({ color: '#c8d3d8', metalness: .75, roughness: .3 });
+  for (const x of [-16.48, -15.72]) box(fixtures, 'tray-rim', [.02, .025, .56], [x, .815, 12.75], steel);
+  for (const z of [12.48, 13.02]) box(fixtures, 'tray-rim', [.74, .025, .02], [-16.1, .815, z], steel);
+  const scissors = place(new Group(), 'surgical-scissors', -16.35, 12.79, 0, .817);
+  for (const side of [-1, 1]) {
+    const blade = box(scissors, 'scissor-blade', [.014, .012, .23], [side * .022, 0, 0], steel);
+    blade.rotation.y = side * .25;
+    const handle = new Mesh(new TorusGeometry(.034, .007, 6, 16), steel);
+    handle.rotation.x = Math.PI / 2;
+    handle.position.set(side * .052, 0, .14);
+    scissors.add(handle);
+  }
+  const pivot = new Mesh(new CylinderGeometry(.014, .014, .018, 8), steel);
+  scissors.add(pivot);
+  const forceps = place(new Group(), 'surgical-forceps', -16.1, 12.79, 0, .817);
+  for (const side of [-1, 1]) {
+    const prong = box(forceps, 'forceps-prong', [.012, .012, .25], [side * .016, 0, 0], steel);
+    prong.rotation.y = side * .12;
+  }
+  const scalpel = place(new Group(), 'surgical-scalpel', -15.85, 12.79, 0, .817);
+  box(scalpel, 'scalpel-handle', [.026, .014, .15], [0, 0, .06], steel);
+  const blade = new Mesh(new CylinderGeometry(0, .018, .1, 3), steel);
+  blade.geometry.rotateX(-Math.PI / 2);
+  blade.geometry.scale(.8, .3, 1);
+  blade.position.z = -.065;
+  scalpel.add(blade);
+  box(fixtures, 'folded-bandage', [.16, .07, .12], [-16.25, .84, 12.52], '#f6f2e5');
+  bottle(-15.91, .81, 12.52, '#9b6c36');
   label('看診區', -16.84, 2.25, 11.5, 1.5, Math.PI / 2);
 
   place(bench(1.7), 'waiting-bench', -11.75, 15.45, -Math.PI / 2);

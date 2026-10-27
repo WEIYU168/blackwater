@@ -54,6 +54,7 @@ export function installClinicCharacters(world) {
   const clinic = world.clinic;
   if (!clinic) return;
   const patient = createCharacter('clinicPatient');
+  patient.position.y = .1125;
   clinic.patientAnchor.add(patient);
   clinic.patient = patient;
   clinic.onExamine = (elapsed, reducedMotion) => {
