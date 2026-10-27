@@ -6,7 +6,7 @@ import {
 // This clinic shares the town's existing architectural materials and furniture.
 // The shell is retained outdoors and exchanged for low walls while inside.
 export function buildClinic(host, helpers) {
-  const { house, sign, table, cabinet, bed, bench, lamp, merge } = helpers;
+  const { house, sign, table, cabinet, bed, bench, lamp, merge, materials = {}, manuscriptTexture } = helpers;
   const scene = host.scene;
   const floorHeight = .32;
   const fixtures = new Group();
@@ -73,7 +73,15 @@ export function buildClinic(host, helpers) {
     fixtures.add(lid);
   }
 
-  box(cutaway, 'clinic-floor', [5.8, .09, 7.8], [-14, floorHeight - .045, 13.5], '#c1bba8');
+  const floorMaterial = materials.flag?.clone();
+  if (floorMaterial) {
+    floorMaterial.map = floorMaterial.map.clone();
+    floorMaterial.map.repeat.set(3, 4);
+    floorMaterial.bumpMap = floorMaterial.map;
+    floorMaterial.bumpScale = .018;
+    floorMaterial.color.set('#cec7b6');
+  }
+  box(cutaway, 'clinic-floor', [5.8, .09, 7.8], [-14, floorHeight - .045, 13.5], floorMaterial ?? '#c1bba8');
   // Low walls leave the room readable from every permitted orbit angle.
   for (const [name, size, position] of [
     ['back-wall', [.24, .65, 8], [-16.88, .325, 13.5]],
@@ -87,10 +95,12 @@ export function buildClinic(host, helpers) {
     backdrop.userData.keep = true;
     cutaway.add(backdrop);
   }
-  box(westBackdrop, 'west-interior-wall', [.18, 2.65, 7.76], [-16.88, 1.325, 13.5], '#dcd5bf');
+  box(westBackdrop, 'west-interior-wall', [.18, 2.65, 7.76], [-16.88, 1.325, 13.5], materials.plaster ?? '#dcd5bf');
   box(westBackdrop, 'west-wainscot', [.02, .85, 7.72], [-16.775, .425, 13.5], '#87968a');
-  box(northBackdrop, 'north-interior-wall', [5.76, 2.65, .18], [-14, 1.325, 9.62], '#dcd5bf');
+  box(northBackdrop, 'north-interior-wall', [5.76, 2.65, .18], [-14, 1.325, 9.62], materials.plaster ?? '#dcd5bf');
   box(northBackdrop, 'north-wainscot', [5.72, .85, .02], [-14, .425, 9.725], '#87968a');
+  box(westBackdrop, 'west-wall-trim', [.035, .045, 7.72], [-16.76, .87, 13.5], materials.woodLight ?? '#8e795b');
+  box(northBackdrop, 'north-wall-trim', [5.72, .045, .035], [-14, .87, 9.74], materials.woodLight ?? '#8e795b');
   merge(cutaway, () => false);
   cutaway.userData.keep = true;
   cutaway.visible = false;
@@ -155,15 +165,18 @@ export function buildClinic(host, helpers) {
   place(table(1.75, .8, .78), 'clinic-writing-desk', -13.8, 16.35);
   host.collide(-13.8, 16.35, .875, .4);
   place(lamp(false), 'desk-lamp', -14.38, 16.32, 0, .82);
-  box(fixtures, 'case-records', [.48, .035, .37], [-13.72, .83, 16.28], '#eee6d2');
-  box(fixtures, 'clinic-pen', [.025, .025, .31], [-13.31, .86, 16.28], '#4a3a2e');
-  label('病歷與人權筆記', -13.8, 1.05, 16.65, 1.55);
+  box(fixtures, 'case-records', [.84, .018, .62], [-13.65, .817, 16.3], '#eee6d2');
+  box(fixtures, 'clinic-pen', [.025, .025, .31], [-13.08, .824, 16.28], materials.wood ?? '#4a3a2e');
+  label('王醫師的手寫稿', -13.8, 1.05, 16.77, 1.55);
 
   // Keep the existing manuscript clue and later memorial puzzle in this room.
-  label('王醫師的手寫稿', -16.84, 2.1, 13.8, 1.8, Math.PI / 2);
-  const manuscript = sign('行醫手記', 1.6, .65, { size: 44, bg: '#f5f0df', fg: '#443b30' });
-  manuscript.position.set(-16.85, 1.48, 13.8);
-  manuscript.rotation.y = Math.PI / 2;
+  const manuscript = sign('', .82, .598, { bg: '#f5f0df' });
+  manuscript.name = 'wang-manuscript';
+  if (manuscriptTexture) manuscript.material.map = manuscriptTexture;
+  manuscript.position.set(-13.65, .828, 16.3);
+  manuscript.rotation.x = -Math.PI / 2;
+  manuscript.rotation.z = Math.PI;
+  manuscript.userData.keep = true;
   fixtures.add(manuscript);
   place(table(.65, .55, .9), 'memorial-display', -12.1, 11.6);
   host.collide(-12.1, 11.6, .325, .275);
@@ -185,7 +198,7 @@ export function buildClinic(host, helpers) {
   patientAnchor.userData.keep = true;
   patientAnchor.position.set(-15.8, floorHeight, 11.0);
   scene.add(patientAnchor);
-  const interiorLight = new PointLight('#ffe9c5', 2.4, 9, 1.6);
+  const interiorLight = new PointLight('#ffedcf', 1.8, 9, 1.6);
   interiorLight.position.set(-14, 2.9, 13.0);
   interiorLight.castShadow = false;
   scene.add(interiorLight);

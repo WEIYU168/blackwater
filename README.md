@@ -18,3 +18,5 @@
 人物及診所回歸檢查：`node tests/characters.test.cjs`、`node tests/clinic.test.cjs`。
 
 人物遮擋與座椅對齊檢查：`node tests/visibility.test.cjs`。
+
+故事頁面已加大；公車改為平整車頂，並調整村落材質與日光。診所桌面使用原有「我沒有權利替你決定」手稿圖；王醫師看診時的軀幹、頭部與肩膀會共同轉動。姿勢接合檢查：`node tests/doctor-pose.test.cjs`。

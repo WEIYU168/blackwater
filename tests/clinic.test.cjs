@@ -25,15 +25,24 @@ function hotspot(id) {
     opts: {reducedMotion: false}, renderer: {shadowMap:{}}, camTheta: .3, camPhi: .95, camDist: 17,
     route: [], blockedCb(message) { throw new Error(message); }, nearCb() {} };
   const group = () => new T.C();
+  const manuscriptTexture = new T.u();
   const clinic = buildClinic(world, { house: () => ({group:group()}),
     sign: () => new T.A(new T.I(1,.4), new T.N()),
-    table: group, cabinet: group, bed: group, bench: group, lamp: group, merge() {} });
+    table: group, cabinet: group, bed: group, bench: group, lamp: group, manuscriptTexture, merge() {} });
   const floor = clinic.cutaway.getObjectByName('clinic-floor');
   const floorTop = floor.position.y + floor.geometry.parameters.height / 2;
   assert(floorTop > .25, 'Clinic floor must cover the existing 0.25 m raised path');
   assert.equal(clinic.patientAnchor.position.y, floorTop, 'Patient must stand on the clinic floor');
   assert.equal(clinic.doctorPosition.y, floorTop, 'Doctor must stand on the clinic floor');
   world.scene.updateMatrixWorld(true);
+  const manuscript = world.scene.getObjectByName('wang-manuscript');
+  const records = world.scene.getObjectByName('case-records');
+  assert.equal(manuscript.material.map, manuscriptTexture, 'Desk must show the original manuscript image');
+  assert(Math.abs(manuscript.position.x - records.position.x) < .001 && Math.abs(manuscript.position.z - records.position.z) < .001);
+  assert(manuscript.position.y > records.position.y + records.geometry.parameters.height / 2, 'Manuscript sinks into its paper backing');
+  const normal = new T.et(0,0,1).applyQuaternion(manuscript.quaternion);
+  assert(normal.y > .99, 'Manuscript must face up from the desk');
+  console.log('PASS original manuscript is face-up and visible on the writing desk');
   const tray = world.scene.getObjectByName('instrument-tray');
   const trayTop = tray.getWorldPosition(new T.et()).y + tray.geometry.parameters.height / 2;
   for (const name of ['surgical-scissors', 'surgical-forceps', 'surgical-scalpel']) {

@@ -1,0 +1,25 @@
+/* Larger story spreads, with the same paper and ink palette as the journal. */
+.modal:has(.story-entry) { width: min(1180px, 96vw); }
+.story-entry { font-size: clamp(20px, 1.6vw, 23px); padding: 8px 12px 16px; }
+.story-entry p { line-height: 1.95; margin: .55em 0; }
+.story-entry img { width: 40%; max-width: 430px; margin: 0 0 20px 30px; border-radius: 7px; box-shadow: 0 5px 16px #503c2314; }
+.modal:has(.story-entry) .modal-body { padding: 24px; }
+.modal:has(.story-entry) .modal-head { padding: 17px 24px; }
+.modal:has(.story-entry) .modal-foot { padding: 13px 24px; }
+.modal, .dialog, .objective { box-shadow: 0 18px 48px #241a153b, 0 2px 7px #241a1526; }
+.modal-body, .dialog { background-image: radial-gradient(ellipse at top left, #fff9ec70, transparent 75%); }
+.modal-head, .modal-foot { background-image: linear-gradient(110deg, #fff6e640, #bda78312); }
+.btn { box-shadow: 0 1px 2px #38271615, inset 0 1px #fff5; }
+.btn.primary { background-image: linear-gradient(#ffffff0a, #39140812); }
+@media (max-width: 720px) {
+  .story-entry { padding: 0; font-size: 17px; }
+  .story-entry img { width: 42%; margin: 0 0 12px 16px; }
+  .modal:has(.story-entry) .modal-body { padding: 16px; }
+  .modal:has(.story-entry) .modal-head, .modal:has(.story-entry) .modal-foot { padding: 10px 14px; }
+}
+@media (max-height: 550px) {
+  .story-entry { font-size: 16px; padding: 0; }
+  .story-entry img { width: 34%; max-width: 280px; margin-left: 18px; }
+  .modal:has(.story-entry) .modal-body { padding: 10px 16px; }
+  .modal:has(.story-entry) .modal-head, .modal:has(.story-entry) .modal-foot { padding: 7px 12px; }
+}

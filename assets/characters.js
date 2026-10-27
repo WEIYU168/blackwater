@@ -45,7 +45,20 @@ export function createCharacter(id) {
   const template = templates.get(id);
   if (!template) throw new Error(`缺少人物模型：${id}`);
   const root = template.clone(true);
+  // Lean around the waist, carrying the neck and shoulders with the torso.
+  // The exported body geometry is in full-height coordinates, so rotating it
+  // alone around the ground leaves the other joints behind.
+  if (id === 'wang') {
+    const body = root.getObjectByName('body');
+    const torso = new Group();
+    torso.name = 'torso-pivot';
+    torso.position.y = root.getObjectByName('legL').position.y;
+    body.parent.add(torso);
+    root.updateMatrixWorld(true);
+    for (const name of ['body', 'head', 'armL', 'armR']) torso.attach(root.getObjectByName(name));
+  }
   root.userData.rig = Object.fromEntries(['body', 'head', 'armL', 'armR', 'forearmL', 'forearmR'].map(name => [name, root.getObjectByName(name)]));
+  if (id === 'wang') root.userData.rig.body = root.getObjectByName('torso-pivot');
   root.userData.restPose = Object.fromEntries(Object.entries(root.userData.rig).filter(([, node]) => node).map(([name, node]) => [name, node.rotation.toArray()]));
   return root;
 }
