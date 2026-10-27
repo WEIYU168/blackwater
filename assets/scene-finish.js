@@ -3,13 +3,15 @@ import { C as Group, A as Mesh, s as BoxGeometry, g as CylinderGeometry, N as Me
 export function loadManuscriptTexture() {
   const image = new Image();
   const placeholder = document.createElement('canvas');
-  placeholder.width = placeholder.height = 1;
-  placeholder.getContext('2d').fillStyle = '#f5f0df';
-  placeholder.getContext('2d').fillRect(0, 0, 1, 1);
+  placeholder.width = 240;
+  placeholder.height = 175;
+  const context = placeholder.getContext('2d');
+  context.fillStyle = '#f5f0df';
+  context.fillRect(0, 0, 240, 175);
   const texture = new CanvasTexture(placeholder);
   texture.colorSpace = SRGBColorSpace;
   texture.anisotropy = 4;
-  image.onload = () => { texture.image = image; texture.needsUpdate = true; };
+  image.onload = () => { context.drawImage(image, 0, 0, 240, 175); texture.needsUpdate = true; };
   image.src = new URL('./l10-manuscript-DIJ9bMSL.jpg', import.meta.url).href;
   return texture;
 }
